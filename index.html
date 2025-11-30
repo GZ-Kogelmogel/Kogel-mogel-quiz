@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Kogel Mogel 1 — Quiz</title>
+  <title>Kogel Mogel 1 — Photo Quiz</title>
   <style>
     body {
       font-family: 'Segoe UI Variable Display', 'Segoe UI', Tahoma, sans-serif;
@@ -19,20 +17,16 @@
       margin: 0;
       padding: 20px;
       text-align: center;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
     }
 
     .container {
       background: rgba(255, 255, 255, 0.06);
-      padding: 40px;
+      padding: 30px;
       border-radius: 24px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      max-width: 760px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+      max-width: 700px;
       width: 92%;
       backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
     }
 
     h1 {
@@ -42,20 +36,11 @@
       font-size: 2.1em;
     }
 
-    .lang-toggle {
-      margin-bottom: 18px;
-      font-size: 0.95em;
-      color: #94a3b8;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    #quote-display {
-      font-size: 1.6em;
-      margin: 24px 0 16px 0;
-      font-style: italic;
-      color: #f8fafc;
-      min-height: 72px;
+    #character-photo {
+      max-width: 100%;
+      border-radius: 16px;
+      margin: 20px 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     }
 
     .options {
@@ -76,11 +61,10 @@
       border-radius: 12px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
-      transition: transform 0.18s ease, box-shadow 0.25s ease, opacity 0.2s ease;
-      min-width: 160px;
+      transition: transform 0.18s ease, box-shadow 0.25s ease;
+      min-width: 140px;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-      min-height: 44px;
     }
 
     .btn:hover { transform: scale(1.05); box-shadow: 0 6px 16px rgba(56, 189, 248, 0.6); }
@@ -92,13 +76,6 @@
       margin-bottom: 8px;
       color: #cbd5e1;
       min-height: 24px;
-    }
-
-    .explanation {
-      font-size: 0.95em;
-      color: #cbd5e1;
-      margin-bottom: 16px;
-      min-height: 40px;
     }
 
     .score {
@@ -117,130 +94,67 @@
       opacity: 0.85;
       padding: 6px 12px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       backdrop-filter: blur(10px);
-    }
-
-    .disabled {
-      opacity: 0.5;
-      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>🎬 Kogel Mogel 1 — Quiz</h1>
-    <div class="lang-toggle" id="langToggle">Switch to English</div>
-
-    <p id="quote-display">Loading quote...</p>
-
+    <h1>📸 Kogel Mogel 1 — Photo Quiz</h1>
+    <img id="character-photo" src="" alt="Character photo">
     <div class="options">
       <button class="btn" id="option1">Option 1</button>
       <button class="btn" id="option2">Option 2</button>
     </div>
-
     <div class="feedback" id="feedback"></div>
-    <div class="explanation" id="explanation"></div>
-
     <div class="options">
       <button class="btn" id="nextBtn">Next</button>
-      <button class="btn" id="resetBtn">Reset score</button>
+      <button class="btn" id="resetBtn">Reset Score</button>
     </div>
-
     <div class="score" id="score">Score: 0</div>
   </div>
 
   <div class="footer">Made by Gracjan</div>
 
   <script>
-    // Kogel Mogel 1 ONLY — verified quotes, attributions, contexts
-    const quotes = [
+    const photos = [
       {
-        pl: "Marian, tu jest jakby luksusowo.",
-        en: "Marian, it's kind of luxurious here.",
-        correct: "Barbara Wolańska",
-        options: ["Barbara Wolańska", "Maria Solska"],
-        explanationPl: "Barbara zachwyca się wystrojem mieszkania Wolańskich po przyjeździe.",
-        explanationEn: "Barbara admires the Wolański apartment interior upon arrival."
-      },
-      {
-        pl: "Ty może i głupia nie jesteś, ale rozumu to ty nie masz za grosz!",
-        en: "You may not be stupid, but you haven’t got a shred of sense!",
-        correct: "Maria Solska",
-        options: ["Maria Solska", "Barbara Wolańska"],
-        explanationPl: "Maria beszta Kasię za odmowę ślubu i decyzję o wyjeździe.",
-        explanationEn: "Maria scolds Kasia for refusing marriage and deciding to leave."
-      },
-      {
-        pl: "Jak mówię, to mówię, a jak mówię, to wiem.",
-        en: "When I speak, I speak, and when I speak, I know.",
-        correct: "Zenon Solski",
-        options: ["Zenon Solski", "Docent Marian Wolański"],
-        explanationPl: "Zenon podkreśla swoją władzę podczas rodzinnej kłótni.",
-        explanationEn: "Zenon asserts his authority during a family argument."
-      },
-      {
-        pl: "Oj córciu, córciu, już ty długo panienką nie będziesz!",
-        en: "Oh daughter, you won’t stay single for long!",
-        correct: "Maria Solska",
-        options: ["Maria Solska", "Kasia Solska"],
-        explanationPl: "Maria naciska na Kasię w temacie zamążpójścia.",
-        explanationEn: "Maria pressures Kasia about getting married."
-      },
-      {
-        pl: "Nie ma takiej możliwości, żeby było coś niemożliwe.",
-        en: "There’s no such thing as impossible.",
+        img: "K.png",
         correct: "Kasia Solska",
-        options: ["Kasia Solska", "Piotruś Wolański"],
-        explanationPl: "Kasia broni swoich planów nauki i wyjazdu do Warszawy.",
-        explanationEn: "Kasia defends her plans to study and move to Warsaw."
+        options: ["Kasia Solska", "Barbara Wolańska"]
       },
       {
-        pl: "Jeszcze jednej brakuje. Dla pewności trzeba będzie skrzynkę dokupić.",
-        en: "We’re short one. To be safe, we’ll need to buy a whole crate.",
-        correct: "Zenon Solski",
-        options: ["Zenon Solski", "Maria Solska"],
-        explanationPl: "Zenon komentuje po rozbiciu butelki wódki — ironia sytuacyjna.",
-        explanationEn: "Zenon comments after a vodka bottle breaks — situational irony."
-      },
-      {
-        pl: "Patrz, Zenuś, jaka posłuszna rodzicom. Sama się zamknęła.",
-        en: "See, Zenuś, how obedient she is. She locked herself in.",
+        img: "S.png",
         correct: "Maria Solska",
-        options: ["Maria Solska", "Barbara Wolańska"],
-        explanationPl: "Maria ironicznie komentuje, gdy Kasia zamyka się w pokoju.",
-        explanationEn: "Maria’s sarcastic remark when Kasia locks herself in her room."
+        options: ["Maria Solska", "Kasia Solska"]
       },
       {
-        pl: "No przecież dla przyjemności nikt nie pije, tylko jak mus.",
-        en: "Well, no one drinks for pleasure — only when one must.",
-        correct: "Maria Solska",
-        options: ["Maria Solska", "Zenon Solski"],
-        explanationPl: "Maria usprawiedliwia picie podczas rodzinnej sceny.",
-        explanationEn: "Maria justifies drinking during a family scene."
+        img: "M.png",
+        correct: "Docent Marian Wolański",
+        options: ["Docent Marian Wolański", "Zenon Solski"]
+      },
+      {
+        img: "E.png",
+        correct: "Barbara Wolańska",
+        options: ["Barbara Wolańska", "Maria Solska"]
       }
     ];
 
-    // State
-    let language = "pl";
     let score = 0;
-    let currentQuote = null;
+    let currentPhoto = null;
 
-    // Elements
     const el = {
-      langToggle: document.getElementById("langToggle"),
-      quote: document.getElementById("quote-display"),
+      photo: document.getElementById("character-photo"),
       option1: document.getElementById("option1"),
       option2: document.getElementById("option2"),
       feedback: document.getElementById("feedback"),
-      explanation: document.getElementById("explanation"),
       score: document.getElementById("score"),
       nextBtn: document.getElementById("nextBtn"),
       resetBtn: document.getElementById("resetBtn")
     };
 
-    // Utils
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -249,27 +163,15 @@
       return arr;
     }
 
-    // Render
-    function loadQuote() {
-      if (!quotes.length) {
-        el.quote.textContent = language === "pl" ? "Brak cytatów do wyświetlenia." : "No quotes to display.";
-        return;
-      }
+    function loadPhoto() {
+      const randomIndex = Math.floor(Math.random() * photos.length);
+      currentPhoto = { ...photos[randomIndex] };
+      currentPhoto.shuffledOptions = shuffle([...currentPhoto.options]);
 
-      const randomIndex = Math.floor(Math.random() * quotes.length);
-      currentQuote = { ...quotes[randomIndex] };
-
-      currentQuote.shuffledOptions = shuffle([...currentQuote.options]);
-
-      el.quote.textContent = `„${currentQuote[language]}”`;
-      el.option1.textContent = currentQuote.shuffledOptions[0];
-      el.option2.textContent = currentQuote.shuffledOptions[1];
-
+      el.photo.src = currentPhoto.img;
+      el.option1.textContent = currentPhoto.shuffledOptions[0];
+      el.option2.textContent = currentPhoto.shuffledOptions[1];
       el.feedback.textContent = "";
-      el.explanation.textContent = "";
-
-      el.option1.classList.remove("disabled");
-      el.option2.classList.remove("disabled");
       el.option1.disabled = false;
       el.option2.disabled = false;
     }
@@ -278,65 +180,27 @@
       el.score.textContent = `Score: ${score}`;
     }
 
-    // Actions
     function checkAnswer(idx) {
-      if (!currentQuote) return;
-      const selected = currentQuote.shuffledOptions[idx];
-      const isCorrect = selected === currentQuote.correct;
+      const selected = currentPhoto.shuffledOptions[idx];
+      const isCorrect = selected === currentPhoto.correct;
 
-      el.feedback.textContent = isCorrect
-        ? (language === "pl" ? "✅ Poprawnie!" : "✅ Correct!")
-        : (language === "pl" ? "❌ Niepoprawnie!" : "❌ Incorrect!");
-
-      el.explanation.textContent = language === "pl"
-        ? currentQuote.explanationPl
-        : currentQuote.explanationEn;
-
+      el.feedback.textContent = isCorrect ? "✅ Correct!" : "❌ Incorrect!";
       if (isCorrect) {
         score++;
         updateScore();
       }
-
-      // Lock options until next
       el.option1.disabled = true;
       el.option2.disabled = true;
-      el.option1.classList.add("disabled");
-      el.option2.classList.add("disabled");
     }
 
-    function toggleLanguage() {
-      language = language === "pl" ? "en" : "pl";
-      el.langToggle.textContent = language === "pl" ? "Switch to English" : "Przełącz na polski";
-
-      // Re-render current quote and explanation in new language
-      if (currentQuote) {
-        el.quote.textContent = `„${currentQuote[language]}”`;
-        if (el.explanation.textContent.trim().length) {
-          el.explanation.textContent = language === "pl"
-            ? currentQuote.explanationPl
-            : currentQuote.explanationEn;
-        }
-      }
-    }
-
-    function resetScore() {
-      score = 0;
-      updateScore();
-      el.feedback.textContent = "";
-      el.explanation.textContent = "";
-      loadQuote();
-    }
-
-    // Events
     el.option1.addEventListener("click", () => checkAnswer(0));
     el.option2.addEventListener("click", () => checkAnswer(1));
-    el.nextBtn.addEventListener("click", loadQuote);
-    el.resetBtn.addEventListener("click", resetScore);
-    el.langToggle.addEventListener("click", toggleLanguage);
+    el.nextBtn.addEventListener("click", loadPhoto);
+    el.resetBtn.addEventListener("click", () => { score = 0; updateScore(); loadPhoto(); });
 
     document.addEventListener("DOMContentLoaded", () => {
       updateScore();
-      loadQuote();
+      loadPhoto();
     });
   </script>
 </body>
