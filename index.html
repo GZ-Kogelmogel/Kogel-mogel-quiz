@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Kogel Mogel Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI Variable Display', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #e0f2fe;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      max-width: 650px;
+      width: 90%;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    h1 {
+      color: #38bdf8;
+      margin-bottom: 25px;
+      font-weight: 600;
+      font-size: 2.2em;
+    }
+
+    #quote-display {
+      font-size: 1.6em;
+      margin: 30px 0 20px 0;
+      font-style: italic;
+      color: #f8fafc;
+      min-height: 70px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .option-btn {
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #0f172a;
+      border: none;
+      padding: 14px 24px;
+      font-size: 1em;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      min-width: 120px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .option-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(56, 189, 248, 0.6);
+    }
+
+    .feedback {
+      font-size: 1.1em;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #94a3b8;
+      min-height: 24px;
+    }
+
+    .lang-toggle {
+      margin-bottom: 20px;
+      font-size: 0.9em;
+      color: #94a3b8;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      color: #64748b;
+      font-size: 0.85em;
+      opacity: 0.85;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎬 Kogel Mogel Quiz</h1>
+    <div class="lang-toggle" onclick="toggleLanguage()">Switch to English</div>
+    <p id="quote-display">Loading quote...</p>
+    <div class="options">
+      <button class="option-btn" id="option1" onclick="checkAnswer(0)">Option 1</button>
+      <button class="option-btn" id="option2" onclick="checkAnswer(1)">Option 2</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div class="footer">Made by Gracjan</div>
+
+  <script>
+    const quotes = [
+      {
+        pl: "Marian, tu jest jakby luksusowo.",
+        en: "Marian, it's kind of luxurious here.",
+        correct: "Barbara Wolańska",
+        options: ["Barbara Wolańska", "Maria Solska"]
+      },
+      {
+        pl: "Moja decyzja jest jakby nieodwołalna.",
+        en: "My decision is kind of final.",
+        correct: "Docent Marian Wolański",
+        options: ["Docent Marian Wolański", "Zenon Solski"]
+      },
+      {
+        pl: "Nie ma takiej możliwości, żeby było coś niemożliwe.",
+        en: "There's no such thing as impossible.",
+        correct: "Kasia Solska",
+        options: ["Kasia Solska", "Piotruś Wolański"]
+      },
+      {
+        pl: "Ach, te kobiety! Piórko, piórko, piórko...",
+        en: "Ah, these women! Feather, feather, feather...",
+        correct: "Docent Marian Wolański",
+        options: ["Docent Marian Wolański", "Barbara Wolańska"]
+      },
+      {
+        pl: "On ma i horyzont, i holzwagen, i jeszcze motor emzetę ma!",
+        en: "He's got vision, a Volkswagen, and even an MZ motorbike!",
+        correct: "Maria Solska",
+        options: ["Maria Solska", "Zenon Solski"]
+      }
+    ];
+
+    let currentQuote = {};
+    let language = "pl";
+
+    function toggleLanguage() {
+      language = language === "pl" ? "en" : "pl";
+      document.querySelector(".lang-toggle").textContent = language === "pl" ? "Switch to English" : "Przełącz na polski";
+      loadQuote();
+    }
+
+    function loadQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      currentQuote = quotes[randomIndex];
+      document.getElementById("quote-display").textContent = `„${currentQuote[language]}”`;
+      document.getElementById("option1").textContent = currentQuote.options[0];
+      document.getElementById("option2").textContent = currentQuote.options[1];
+      document.getElementById("feedback").textContent = "";
+    }
+
+    function checkAnswer(selectedIndex) {
+      const selected = currentQuote.options[selectedIndex];
+      const feedback = selected === currentQuote.correct
+        ? (language === "pl" ? "✅ Poprawnie!" : "✅ Correct!")
+        : (language === "pl" ? "❌ Niepoprawnie!" : "❌ Incorrect!");
+      document.getElementById("feedback").textContent = feedback;
+      setTimeout(loadQuote, 1500);
+    }
+
+    loadQuote();
+  </script>
+
+</body>
+</html>
