@@ -18,7 +18,6 @@
       padding: 20px;
       text-align: center;
     }
-
     .container {
       background: rgba(255, 255, 255, 0.06);
       padding: 30px;
@@ -28,74 +27,30 @@
       width: 92%;
       backdrop-filter: blur(20px) saturate(180%);
     }
-
-    h1 {
-      color: #38bdf8;
-      margin-bottom: 14px;
-      font-weight: 600;
-      font-size: 2.1em;
-    }
-
+    h1 { color: #38bdf8; margin-bottom: 14px; font-weight: 600; font-size: 2.1em; }
     #character-photo {
-      max-width: 100%;
-      border-radius: 16px;
-      margin: 20px 0;
+      max-width: 100%; border-radius: 16px; margin: 20px 0;
       box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     }
-
-    .options {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
+    .options { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
     .btn {
       background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-      color: #0f172a;
-      border: none;
-      padding: 14px 24px;
-      font-size: 1em;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+      color: #0f172a; border: none; padding: 14px 24px;
+      font-size: 1em; font-weight: 600; border-radius: 12px;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(56,189,248,0.4);
       transition: transform 0.18s ease, box-shadow 0.25s ease;
-      min-width: 140px;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
+      min-width: 140px; touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent; min-height: 44px;
     }
-
-    .btn:hover { transform: scale(1.05); box-shadow: 0 6px 16px rgba(56, 189, 248, 0.6); }
+    .btn:hover { transform: scale(1.05); box-shadow: 0 6px 16px rgba(56,189,248,0.6); }
     .btn:active { transform: scale(0.98); }
-
-    .feedback {
-      font-size: 1.1em;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #cbd5e1;
-      min-height: 24px;
-    }
-
-    .score {
-      font-size: 1em;
-      font-weight: 600;
-      color: #38bdf8;
-      margin-bottom: 6px;
-    }
-
+    .feedback { font-size: 1.1em; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; min-height: 24px; }
+    .score { font-size: 1em; font-weight: 600; color: #38bdf8; margin-bottom: 6px; }
     .footer {
-      position: fixed;
-      bottom: 12px;
-      right: 12px;
-      color: #64748b;
-      font-size: 0.85em;
-      opacity: 0.85;
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
+      position: fixed; bottom: 12px; right: 12px;
+      color: #64748b; font-size: 0.85em; opacity: 0.85;
+      padding: 6px 12px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
     }
   </style>
 </head>
@@ -120,26 +75,13 @@
 
   <script>
     const photos = [
-      {
-        img: "K.png",
-        correct: "Kasia Solska",
-        options: ["Kasia Solska", "Barbara Wolańska"]
-      },
-      {
-        img: "S.png",
-        correct: "Maria Solska",
-        options: ["Maria Solska", "Kasia Solska"]
-      },
-      {
-        img: "M.png",
-        correct: "Docent Marian Wolański",
-        options: ["Docent Marian Wolański", "Zenon Solski"]
-      },
-      {
-        img: "E.png",
-        correct: "Barbara Wolańska",
-        options: ["Barbara Wolańska", "Maria Solska"]
-      }
+      { img: "K.png", correct: "Kasia Solska", options: ["Kasia Solska", "Barbara Wolańska"] },
+      { img: "S.png", correct: "Maria Solska", options: ["Maria Solska", "Kasia Solska"] },
+      { img: "M.png", correct: "Docent Marian Wolański", options: ["Docent Marian Wolański", "Zenon Solski"] },
+      { img: "E.png", correct: "Barbara Wolańska", options: ["Barbara Wolańska", "Maria Solska"] },
+      { img: "P.png", correct: "Paweł", options: ["Paweł", "Stanisław"] },
+      { img: "A.png", correct: "Stanisław", options: ["Stanisław", "Paweł"] },
+      { img: "Z.png", correct: "Zenon Solski", options: ["Zenon Solski", "Docent Marian Wolański"] }
     ];
 
     let score = 0;
@@ -183,12 +125,8 @@
     function checkAnswer(idx) {
       const selected = currentPhoto.shuffledOptions[idx];
       const isCorrect = selected === currentPhoto.correct;
-
       el.feedback.textContent = isCorrect ? "✅ Correct!" : "❌ Incorrect!";
-      if (isCorrect) {
-        score++;
-        updateScore();
-      }
+      if (isCorrect) { score++; updateScore(); }
       el.option1.disabled = true;
       el.option2.disabled = true;
     }
@@ -205,3 +143,4 @@
   </script>
 </body>
 </html>
+
