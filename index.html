@@ -33,7 +33,6 @@
       width: 90%;
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     h1 {
@@ -83,9 +82,23 @@
     .feedback {
       font-size: 1.1em;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       color: #94a3b8;
       min-height: 24px;
+    }
+
+    .explanation {
+      font-size: 0.95em;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+      min-height: 40px;
+    }
+
+    .score {
+      font-size: 1em;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 15px;
     }
 
     .lang-toggle {
@@ -121,6 +134,8 @@
       <button class="option-btn" id="option2" onclick="checkAnswer(1)">Option 2</button>
     </div>
     <div class="feedback" id="feedback"></div>
+    <div class="explanation" id="explanation"></div>
+    <div class="score" id="score">Score: 0</div>
   </div>
 
   <div class="footer">Made by Gracjan</div>
@@ -131,36 +146,47 @@
         pl: "Marian, tu jest jakby luksusowo.",
         en: "Marian, it's kind of luxurious here.",
         correct: "Barbara Wolańska",
-        options: ["Barbara Wolańska", "Maria Solska"]
+        options: ["Barbara Wolańska", "Maria Solska"],
+        explanationPl: "Barbara mówi to w mieszkaniu, zachwycając się wystrojem.",
+        explanationEn: "Barbara says this in the apartment, admiring the decor."
       },
       {
         pl: "Moja decyzja jest jakby nieodwołalna.",
         en: "My decision is kind of final.",
         correct: "Docent Marian Wolański",
-        options: ["Docent Marian Wolański", "Zenon Solski"]
+        options: ["Docent Marian Wolański", "Zenon Solski"],
+        explanationPl: "Docent wypowiada to, podkreślając swoją stanowczość.",
+        explanationEn: "The Docent says this to emphasize his firmness."
       },
       {
         pl: "Nie ma takiej możliwości, żeby było coś niemożliwe.",
         en: "There's no such thing as impossible.",
         correct: "Kasia Solska",
-        options: ["Kasia Solska", "Piotruś Wolański"]
+        options: ["Kasia Solska", "Piotruś Wolański"],
+        explanationPl: "Kasia mówi to, pokazując swoją determinację.",
+        explanationEn: "Kasia says this, showing her determination."
       },
       {
         pl: "Ach, te kobiety! Piórko, piórko, piórko...",
         en: "Ah, these women! Feather, feather, feather...",
         correct: "Docent Marian Wolański",
-        options: ["Docent Marian Wolański", "Barbara Wolańska"]
+        options: ["Docent Marian Wolański", "Barbara Wolańska"],
+        explanationPl: "Docent komentuje kobiety w charakterystyczny sposób.",
+        explanationEn: "The Docent comments on women in his characteristic way."
       },
       {
         pl: "On ma i horyzont, i holzwagen, i jeszcze motor emzetę ma!",
         en: "He's got vision, a Volkswagen, and even an MZ motorbike!",
         correct: "Maria Solska",
-        options: ["Maria Solska", "Zenon Solski"]
+        options: ["Maria Solska", "Zenon Solski"],
+        explanationPl: "Maria wylicza zalety potencjalnego kandydata na męża.",
+        explanationEn: "Maria lists the advantages of a potential husband."
       }
     ];
 
     let currentQuote = {};
     let language = "pl";
+    let score = 0;
 
     function toggleLanguage() {
       language = language === "pl" ? "en" : "pl";
@@ -171,23 +197,21 @@
     function loadQuote() {
       const randomIndex = Math.floor(Math.random() * quotes.length);
       currentQuote = quotes[randomIndex];
+
+      // Shuffle options
+      const shuffled = [...currentQuote.options].sort(() => Math.random() - 0.5);
+      currentQuote.shuffledOptions = shuffled;
+
       document.getElementById("quote-display").textContent = `„${currentQuote[language]}”`;
-      document.getElementById("option1").textContent = currentQuote.options[0];
-      document.getElementById("option2").textContent = currentQuote.options[1];
+      document.getElementById("option1").textContent = shuffled[0];
+      document.getElementById("option2").textContent = shuffled[1];
       document.getElementById("feedback").textContent = "";
+      document.getElementById("explanation").textContent = "";
     }
 
     function checkAnswer(selectedIndex) {
-      const selected = currentQuote.options[selectedIndex];
-      const feedback = selected === currentQuote.correct
-        ? (language === "pl" ? "✅ Poprawnie!" : "✅ Correct!")
-        : (language === "pl" ? "❌ Niepoprawnie!" : "❌ Incorrect!");
-      document.getElementById("feedback").textContent = feedback;
-      setTimeout(loadQuote, 1500);
-    }
+      const selected = currentQuote.shuffledOptions[selectedIndex];
+      const isCorrect = selected === currentQuote.correct;
 
-    loadQuote();
-  </script>
-
-</body>
-</html>
+      const feedback = isCorrect
+        ? (language === "pl" ? "✅ Popraw
