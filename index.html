@@ -74,18 +74,20 @@
   <div class="footer">Made by Gracjan</div>
 
   <script>
-    const photos = [
+    const allPhotos = [
       { img: "K.png", correct: "Kasia Solska", options: ["Kasia Solska", "Barbara Wolańska"] },
       { img: "S.png", correct: "Maria Solska", options: ["Maria Solska", "Kasia Solska"] },
       { img: "M.png", correct: "Docent Marian Wolański", options: ["Docent Marian Wolański", "Zenon Solski"] },
       { img: "E.png", correct: "Barbara Wolańska", options: ["Barbara Wolańska", "Maria Solska"] },
       { img: "P.png", correct: "Paweł", options: ["Paweł", "Stanisław"] },
       { img: "A.png", correct: "Stanisław", options: ["Stanisław", "Paweł"] },
-      { img: "Z.png", correct: "Zenon Solski", options: ["Zenon Solski", "Docent Marian Wolański"] }
+      { img: "Z.png", correct: "Zenon Solski", options: ["Zenon Solski", "Docent Marian Wolański"] },
+      { img: "L.png", correct: "Ferdynand", options: ["Ferdynand", "Zenon Solski"] }
     ];
 
     let score = 0;
     let currentPhoto = null;
+    let remainingPhotos = [...allPhotos]; // pool that shrinks as we play
 
     const el = {
       photo: document.getElementById("character-photo"),
@@ -106,8 +108,14 @@
     }
 
     function loadPhoto() {
-      const randomIndex = Math.floor(Math.random() * photos.length);
-      currentPhoto = { ...photos[randomIndex] };
+      if (remainingPhotos.length === 0) {
+        // reset pool when exhausted
+        remainingPhotos = [...allPhotos];
+      }
+      const randomIndex = Math.floor(Math.random() * remainingPhotos.length);
+      currentPhoto = { ...remainingPhotos[randomIndex] };
+      remainingPhotos.splice(randomIndex, 1); // remove from pool
+
       currentPhoto.shuffledOptions = shuffle([...currentPhoto.options]);
 
       el.photo.src = currentPhoto.img;
@@ -134,7 +142,7 @@
     el.option1.addEventListener("click", () => checkAnswer(0));
     el.option2.addEventListener("click", () => checkAnswer(1));
     el.nextBtn.addEventListener("click", loadPhoto);
-    el.resetBtn.addEventListener("click", () => { score = 0; updateScore(); loadPhoto(); });
+    el.resetBtn.addEventListener("click", () => { score = 0; updateScore(); remainingPhotos = [...allPhotos]; loadPhoto(); });
 
     document.addEventListener("DOMContentLoaded", () => {
       updateScore();
